@@ -1,0 +1,38 @@
+flowchart TD
+    owner[Owner: pets, tasks, or a question]
+    inputGuard[Input guardrail]
+    refusal[Refusal with a reason code]
+    agent[Care plan agent]
+    schedulerRead[Scheduler: today's tasks]
+    retriever[Retriever: keyword coverage plus TF-IDF]
+    notes[(knowledge/*.md care notes)]
+    propose[Propose one task per uncovered topic]
+    outputGuard[Output guardrail: species, dosage text, overlap, confidence]
+    revise[Revise: move the task 15 minutes or drop it]
+    review[Human review]
+    saved[Pet task list]
+    views[Today's schedule and task tabs]
+    answer[Answer quoted from one note, plus a disclaimer]
+    logFile[(logs/pawpal_ai.log)]
+    harness[evaluate.py reliability harness]
+
+    owner -->|question| inputGuard
+    inputGuard -->|empty, dosage, injection, or too long| refusal
+    inputGuard -->|allowed| agent
+    owner -->|generate a daily plan| agent
+    agent --> schedulerRead
+    schedulerRead --> retriever
+    retriever --> notes
+    notes --> retriever
+    retriever --> propose
+    propose --> outputGuard
+    outputGuard -->|overlap or blocked text| revise
+    revise --> outputGuard
+    outputGuard -->|suggestion and confidence| review
+    outputGuard -->|grounded answer| answer
+    review -->|accept| saved
+    saved --> views
+    agent --> logFile
+    review --> logFile
+    harness --> agent
+    harness --> logFile

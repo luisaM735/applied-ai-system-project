@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760">
+  <style>
+    text { font-family: Georgia, "Times New Roman", serif; fill: #1f2933; }
+    .box { fill: #f7f4ee; stroke: #1f2933; stroke-width: 1.5; }
+    .store { fill: #e7eef2; stroke: #1f2933; stroke-width: 1.5; }
+    .human { fill: #f3e6d5; stroke: #1f2933; stroke-width: 1.5; }
+    .label { font-size: 16px; }
+    .small { font-size: 13px; fill: #3e4c59; }
+  </style>
+  <rect width="1100" height="760" fill="#fffdf8"/>
+  <text x="40" y="42" font-size="22">PawPal care advisor</text>
+  <text x="40" y="68" class="small">Input moves left to right. A person accepts a suggestion before it becomes a task.</text>
+
+  <rect class="box" x="40" y="110" width="150" height="64" rx="8"/>
+  <text x="115" y="147" text-anchor="middle" class="label">Owner input</text>
+
+  <rect class="box" x="250" y="100" width="170" height="84" rx="8"/>
+  <text x="335" y="132" text-anchor="middle" class="label">Input guardrail</text>
+  <text x="335" y="154" text-anchor="middle" class="small">empty, dose, injection</text>
+
+  <rect class="box" x="490" y="110" width="170" height="64" rx="8"/>
+  <text x="575" y="147" text-anchor="middle" class="label">Care plan agent</text>
+
+  <rect class="store" x="730" y="100" width="180" height="84" rx="8"/>
+  <text x="820" y="132" text-anchor="middle" class="label">Care notes</text>
+  <text x="820" y="154" text-anchor="middle" class="small">knowledge/*.md</text>
+
+  <rect class="box" x="250" y="250" width="170" height="84" rx="8"/>
+  <text x="335" y="282" text-anchor="middle" class="label">Scheduler</text>
+  <text x="335" y="304" text-anchor="middle" class="small">today's tasks</text>
+
+  <rect class="box" x="490" y="250" width="170" height="84" rx="8"/>
+  <text x="575" y="282" text-anchor="middle" class="label">Retriever</text>
+  <text x="575" y="304" text-anchor="middle" class="small">keywords + TF-IDF</text>
+
+  <rect class="box" x="730" y="250" width="180" height="84" rx="8"/>
+  <text x="820" y="282" text-anchor="middle" class="label">Output guardrail</text>
+  <text x="820" y="304" text-anchor="middle" class="small">species, dose, overlap</text>
+
+  <rect class="human" x="490" y="420" width="170" height="84" rx="8"/>
+  <text x="575" y="452" text-anchor="middle" class="label">Human review</text>
+  <text x="575" y="474" text-anchor="middle" class="small">accept or leave it</text>
+
+  <rect class="box" x="730" y="420" width="180" height="84" rx="8"/>
+  <text x="820" y="452" text-anchor="middle" class="label">Saved task</text>
+  <text x="820" y="474" text-anchor="middle" class="small">schedule and tasks</text>
+
+  <rect class="store" x="250" y="420" width="170" height="84" rx="8"/>
+  <text x="335" y="452" text-anchor="middle" class="label">Run log</text>
+  <text x="335" y="474" text-anchor="middle" class="small">logs/pawpal_ai.log</text>
+
+  <rect class="human" x="40" y="560" width="220" height="84" rx="8"/>
+  <text x="150" y="592" text-anchor="middle" class="label">Reliability harness</text>
+  <text x="150" y="614" text-anchor="middle" class="small">python -m pawpal_ai.evaluate</text>
+
+  <path d="M190 142 H250" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M420 142 H490" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M660 142 H730" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M575 174 V250" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M420 292 H490" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M660 292 H730" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M820 334 V420" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M730 462 H660" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M575 504 V292" stroke="#1f2933" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <path d="M490 462 H420" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+  <path d="M150 560 V194" stroke="#1f2933" fill="none" stroke-width="1.5"/>
+</svg>

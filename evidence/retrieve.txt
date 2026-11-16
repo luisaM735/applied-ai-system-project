@@ -1,0 +1,7 @@
+Query: How long should an adult dog walk?
+Species filter: dog
+  0.8372  dog-exercise-adult  (knowledge/dog_care.md)
+  0.5302  dog-feeding-adult  (knowledge/dog_care.md)
+  0.3192  dog-exercise-senior  (knowledge/dog_care.md)
+  0.2459  dog-water-any  (knowledge/dog_care.md)
+  0.2274  general-safety  (knowledge/general_safety.md)
