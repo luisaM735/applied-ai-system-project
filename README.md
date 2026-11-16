@@ -6,7 +6,7 @@ The advisor is a retrieval-augmented planner with guardrails. It is integrated i
 
 ## Original project
 
-The base project is **PawPal+**, the Module 2 pet-care scheduler in this repository (`https://github.com/luisaM735/ai110-module2show-pawpal-starter`).
+The base project is **PawPal+**, the Module 2 pet-care scheduler. The original submission is [ai110-module2show-pawpal-starter](https://github.com/luisaM735/ai110-module2show-pawpal-starter). This repository is the extended copy.
 
 PawPal+ let one owner keep several pets and a list of care tasks. Each task had a time, a duration, a priority, and a frequency (`once`, `daily`, or `weekly`). The scheduler sorted the day, filtered by pet or completion, warned when two tasks started at the same minute, and created the next daily or weekly task after one was marked complete. The program was a Streamlit app (`app.py`), a command-line demo (`main.py`), and 22 pytest cases around `Task`, `Pet`, `Owner`, and `Scheduler`.
 
@@ -305,15 +305,8 @@ Building this showed me that a useful AI feature in an existing app is mostly th
 
 ## Portfolio
 
-Code: [luisaM735/ai110-module2show-pawpal-starter](https://github.com/luisaM735/ai110-module2show-pawpal-starter), branch `applied-ai-system`.
+Code: [luisaM735/applied-ai-system-project](https://github.com/luisaM735/applied-ai-system-project)
 
 This project says I can take a program that already works and add an AI step that shows its sources and refuses a request it should not answer. I would rather ship a planner that cites a note and waits for a person than a fluent answer that cannot be checked.
 
-The course asked for this work in a new public repository so the Module 2 submission stays as it was. These commits are on `applied-ai-system` locally, and `main` is still the original PawPal+ project. To publish a separate repo, create an empty GitHub repository (no README, license, or `.gitignore`), then from this folder:
-
-```bash
-git remote add applied https://github.com/YOUR_USERNAME/applied-ai-system-project.git
-git push -u applied applied-ai-system:main
-```
-
-That pushes this branch to the new repository's `main` and leaves the Module 2 remote untouched.
+The Module 2 repository was left unchanged. This copy carries that history plus the care-advisor commits.
