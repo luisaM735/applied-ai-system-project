@@ -6,11 +6,19 @@ A pet care planning assistant that helps owners manage tasks for their pets.
 import streamlit as st
 from datetime import date
 from pawpal_system import Task, Pet, Owner, Scheduler
+from pawpal_ai.agent import CarePlanAgent
+from pawpal_ai.retriever import KnowledgeRetriever, default_knowledge_dir
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
 st.title("🐾 PawPal+")
-st.caption("Your smart pet care management assistant")
+st.caption("Pet care schedules, with a care advisor that cites its notes and checks its own suggestions")
+
+
+@st.cache_resource
+def load_retriever():
+    """Load the local care notes once per server process."""
+    return KnowledgeRetriever(default_knowledge_dir())
 
 # Initialize session state with Owner object for persistence
 if "owner" not in st.session_state:
@@ -33,7 +41,9 @@ with st.sidebar:
     st.markdown(f"**Total Tasks:** {total_tasks}")
 
 # Main tabs for navigation
-tab1, tab2, tab3 = st.tabs(["🐕 Manage Pets", "📋 Tasks", "📅 Today's Schedule"])
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["🐕 Manage Pets", "📋 Tasks", "📅 Today's Schedule", "🤖 Care Advisor"]
+)
 
 with tab1:
     st.subheader("Add a New Pet")
@@ -216,3 +226,90 @@ with tab3:
         if total > 0:
             progress = completed / total
             st.progress(progress, text=f"{int(progress * 100)}% complete")
+
+with tab4:
+    st.subheader("Care advisor")
+    st.markdown(
+        "The advisor reads today's schedule, retrieves species notes from `knowledge/`, "
+        "and proposes missing care tasks. Nothing is added until you accept it."
+    )
+    agent = CarePlanAgent(scheduler, load_retriever())
+
+    if st.button("Generate today's care plan", type="primary"):
+        st.session_state.care_plan = agent.build_daily_plan()
+
+    notice = st.session_state.pop("advisor_notice", None)
+    if notice:
+        st.success(notice)
+
+    plan = st.session_state.get("care_plan")
+    if plan:
+        for step in plan.trace:
+            if step.startswith("Knowledge warning") or step.startswith("No pets"):
+                st.warning(step)
+
+        if not plan.suggestions and not plan.rejections:
+            st.info("No new tasks to propose. The trace below shows why.")
+
+        for suggestion in plan.suggestions:
+            review = "Needs review" if suggestion.needs_human_review else "Ready for you to accept"
+            moved = ""
+            if suggestion.rescheduled_from:
+                moved = f" Moved from {suggestion.rescheduled_from}."
+            with st.container(border=True):
+                st.markdown(
+                    f"**{suggestion.pet_name}: {suggestion.description}** at {suggestion.scheduled_time}"
+                )
+                st.caption(
+                    f"{suggestion.duration_minutes} min · {suggestion.priority} · {suggestion.frequency}"
+                    f"{moved}"
+                )
+                st.markdown(
+                    f"Confidence **{suggestion.confidence:.2f}** · {review}  \n"
+                    f"Source: `{suggestion.citation_id}` in `{suggestion.source}`"
+                )
+                st.write(suggestion.rationale)
+                if st.button(
+                    "Accept and add to schedule",
+                    key=f"accept_{suggestion.pet_name}_{suggestion.citation_id}_{suggestion.scheduled_time}",
+                ):
+                    if agent.apply_suggestion(suggestion):
+                        st.session_state.advisor_notice = (
+                            f"Added {suggestion.description} for {suggestion.pet_name}."
+                        )
+                        st.session_state.care_plan = agent.build_daily_plan()
+                        st.rerun()
+                    else:
+                        st.error("That time is no longer free, so the task was not added. Generate the plan again.")
+
+        if plan.rejections:
+            st.subheader("Blocked suggestions")
+            for rejection in plan.rejections:
+                st.error(f"{rejection.pet_name}: {rejection.reason} ({rejection.code})")
+
+        with st.expander("How this plan was made"):
+            for index, step in enumerate(plan.trace, start=1):
+                st.markdown(f"{index}. {step}")
+
+    st.divider()
+    st.subheader("Ask a care question")
+    question = st.text_input(
+        "Question",
+        placeholder="How long should an adult dog walk?",
+    )
+    pet_options = ["No specific pet"] + [pet.name for pet in owner.pets]
+    selected_question_pet = st.selectbox("Answer for", pet_options, key="question_pet")
+    if st.button("Ask"):
+        pet_name = None if selected_question_pet == "No specific pet" else selected_question_pet
+        st.session_state.last_answer = agent.answer_question(question, pet_name)
+
+    answer = st.session_state.get("last_answer")
+    if answer:
+        if answer.refused:
+            st.error(answer.text)
+        else:
+            st.success(f"Confidence {answer.confidence:.2f} · source `{answer.citation_id}`")
+            st.write(answer.text)
+        with st.expander("How this answer was checked"):
+            for index, step in enumerate(answer.trace, start=1):
+                st.markdown(f"{index}. {step}")
